@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Happy Medicare Kolhapur — Website
 
-## Getting Started
+Bilingual (मराठी / English) website for **Happy Medicare**, the demo centre at Bindu Chowk, Kolhapur.
+Built with Next.js 15 (App Router), React 19, TypeScript and Tailwind CSS 4.
 
-First, run the development server:
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000  → redirects to /mr
+npm run build && npm start   # production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route | Content |
+|---|---|
+| `/mr`, `/en` | Home: hero, germanium, therapies, benefits, products, how it works, FAQ |
+| `/[lang]/about` | About germanium + the Kolhapur centre, values |
+| `/[lang]/therapies` | 6 therapies + benefits |
+| `/[lang]/products` | Thermal massage bed, germanium mat |
+| `/[lang]/centres` | Searchable list of 45 Maharashtra demo centres (tap to call) |
+| `/[lang]/contact` | Booking form, address, hours, map, directions |
+| `/api/book` | Booking endpoint (validates, rejects Sundays, honeypot anti-spam) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`middleware.ts` sends visitors without a language prefix to `/mr` (or `/en` for English browsers, or their last choice).
 
-## Learn More
+## Where to edit
 
-To learn more about Next.js, take a look at the following resources:
+- **Phone, address, WhatsApp, domain** → `lib/site.ts`
+- **All text (both languages)** → `lib/dictionaries/mr.ts` and `en.ts` (English is type-checked against Marathi, so a missing translation fails the build)
+- **Demo centres** → `lib/centres.ts`
+- **Colours / fonts** → `app/globals.css` (`@theme` block)
+- **Illustrations** → `components/Illustrations.tsx`. Replace with real product photos in `public/images/` using `next/image`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Bookings
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The form POSTs to `/api/book`, then offers a one-tap **Send on WhatsApp** with the details pre-filled.
+To also store every booking, set `BOOKING_WEBHOOK_URL` (see `.env.example`) to a Google Apps Script web app that appends to a Google Sheet, or a Zapier/Make webhook.
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Vercel (free tier is enough): import the repo, set `NEXT_PUBLIC_SITE_URL` (and optionally `BOOKING_WEBHOOK_URL`), deploy, then point the domain at it.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Before going live — confirm with the client
+
+- Real domain name
+- Product photos, and prices if they want them shown
+- Two centre numbers that are misprinted on the flyer: **Boisar** (9 digits) and **Girgaon** (11 digits). They're flagged `verify: true` in `lib/centres.ts`.
+- Exact Google Maps pin for the shop (currently searches "Bindu Chowk, Kolhapur")
+- Whether to list all 45 centres or only Kolhapur

@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --color-brand: #a3154a;
+  --color-brand-dark: #7a0f37;
+  --color-brand-light: #d23a6e;
+  --color-brand-soft: #fbe7ee;
+  --color-accent: #f2a33a;
+  --color-cream: #fffaf8;
+  --color-tint: #fdf1f4;
+  --color-ink: #2a1a20;
+  --color-muted: #6e5a62;
+  --color-line: #eed9e0;
+  --color-wa: #1faf54;
+  --color-night: #2a0e19;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-mukta), system-ui, -apple-system, "Segoe UI", sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --shadow-soft: 0 10px 30px rgb(122 15 55 / 0.1);
+  --shadow-lift: 0 20px 50px rgb(0 0 0 / 0.25);
+
+  --animate-rise: rise 2.6s ease-in-out infinite;
+  @keyframes rise {
+    0%, 100% { transform: translateY(0); opacity: 0.3; }
+    50% { transform: translateY(-10px); opacity: 0.9; }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+  body {
+    @apply bg-cream text-ink antialiased;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  @media (min-width: 640px) {
+    body { font-size: 18px; }
+  }
+  h1, h2, h3 {
+    line-height: 1.2;
+  }
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold transition duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-white shadow-[0_6px_18px_rgb(163_21_74/0.3)] hover:bg-brand-dark;
+}
+@utility btn-ghost {
+  @apply btn border-2 border-brand bg-white text-brand;
+}
+@utility btn-wa {
+  @apply btn bg-wa text-white hover:bg-[#18914a];
+}
+@utility eyebrow {
+  @apply mb-2 text-sm font-bold tracking-widest text-brand uppercase;
+}
+@utility h2 {
+  @apply text-3xl font-extrabold sm:text-4xl lg:text-[2.6rem];
+}
+@utility field {
+  @apply w-full rounded-xl border-[1.5px] border-line bg-cream px-3.5 py-2.5 font-normal text-ink outline-none focus:border-brand focus:ring-3 focus:ring-brand-soft;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-rise { animation: none; }
 }
